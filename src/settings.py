@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+app_log = os.getenv('APP_LOG') == 'true'
+
 TORTOISE_ORM = {
     "connections": {
         "default": {

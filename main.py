@@ -1,15 +1,36 @@
 import asyncio
+import logging
+import os
 import signal
-from tortoise import Tortoise
-from src.settings import TORTOISE_ORM
+import sys
 
+from tortoise import Tortoise
+from src.settings import TORTOISE_ORM, app_log
+
+
+if app_log:
+    logging.basicConfig(
+        stream=sys.stdout,
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(module)s:  [%(funcName)s] %(message)s'
+    )
+else:
+    logging.basicConfig(
+        filename='app.log',
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(module)s:  [%(funcName)s] %(message)s'
+    )
+
+
+logging.info(f'Starting app...{app_log}')
 
 async def run_db():
     try:
+        logging.info('Starting database...')
         await Tortoise.init(config=TORTOISE_ORM)
         await Tortoise.generate_schemas()
     except Exception as e:
-        print(e)
+        logging.error(e)
 
 
 async def close_db():
