@@ -4,7 +4,7 @@ import signal
 import sys
 
 from tortoise import Tortoise
-from src.settings import TORTOISE_ORM, app_log
+from src.settings import TORTOISE_ORM
 
 
 logging.basicConfig(
@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 
 
-logging.info(f'Starting app...{app_log}')
+logging.info(f'Starting app..')
 
 async def run_db():
     try:
