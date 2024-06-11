@@ -1,8 +1,9 @@
 import logging
 
-import requests
+import aiohttp
 
 from src.db.models.task import Contest, Subject, Task
+from src.settings import cookies, headers
 
 
 class Parser:
@@ -32,23 +33,30 @@ class Parser:
     @staticmethod
     async def request_codeforces():
         """ Request codeforces. """
-        try:
-            response = requests.get('https://codeforces.com/api/problemset.problems')
-            data = response.json()
+        url = "https://codeforces.com/api/problemset.problems?tags=implementation"
+        # День все было нормально запросы уходили раз в час
+        # После чего блокнуло и возвращало 403
+        # Ответа не было даже с апи ключом решил к запросу добавить куки и хедеры из браузера
+        # Странное у них апи
+        async with aiohttp.ClientSession(headers=headers, cookies=cookies) as session:
+            try:
+                async with session.get(url) as response:
+                    if response.status != 200:
+                        logging.error(f"Ошибка HTTP: {response.status}, причина: {response.reason}")
+                        return None
 
-            if data['status'] == 'OK':
-                results = data['result']
-            else:
-                results = None
-            return results
+                    data = await response.json()
 
-        except requests.exceptions.RequestException as e:
-            logging.error(f"Ошибка при получении данных: {e}")
-            return None
+                    if data['status'] == 'OK':
+                        results = data['result']
+                        return results
+                    else:
+                        logging.error(f"Статус ответа не OK, получено: {data.get('status')}")
+                        return None
 
-        except Exception as e:
-            logging.error(f"Неизвестная ошибка: {e}")
-            return None
+            except Exception as e:
+                logging.error(f"Неизвестная ошибка: {e}")
+                return None
 
     @staticmethod
     async def get_tags_map():

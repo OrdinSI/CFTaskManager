@@ -18,7 +18,6 @@ logging.basicConfig(
 logging.info(f'Starting app..')
 
 
-
 async def run_db():
     try:
         logging.info('Starting database...')
@@ -42,7 +41,7 @@ async def start_scheduler():
     try:
         parser = Parser()
         scheduler = AsyncIOScheduler()
-        scheduler.add_job(parser.parse, 'interval', seconds=3600)
+        scheduler.add_job(parser.parse, 'interval', seconds=10)
         scheduler.start()
     except Exception as e:
         logging.error(f"Ошибка при запуске задачи: {e}")
