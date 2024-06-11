@@ -33,7 +33,7 @@ class Parser:
     @staticmethod
     async def request_codeforces():
         """ Request codeforces. """
-        url = "https://codeforces.com/api/problemset.problems?tags=implementation"
+        url = "https://codeforces.com/api/problemset.problems"
         # День все было нормально запросы уходили раз в час
         # После чего блокнуло и возвращало 403
         # Ответа не было даже с апи ключом решил к запросу добавить куки и хедеры из браузера
