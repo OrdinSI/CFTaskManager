@@ -3,14 +3,14 @@ import logging
 import aiohttp
 
 from src.db.models.task import Contest, Subject, Task
-from src.settings import cookies, headers
+from src.parser.utils.utils import get_fresh_cookies_and_headers
 
 
 class Parser:
     """ Class for parsing. """
 
     def __init__(self):
-        pass
+        self.base_url = "https://codeforces.com/api/"
 
     async def parse(self):
         """ Main method. """
@@ -30,14 +30,16 @@ class Parser:
         except Exception as e:
             logging.error(f"Ошибка при парсинге: {e}")
 
-    @staticmethod
-    async def request_codeforces():
+    async def request_codeforces(self):
         """ Request codeforces. """
-        url = "https://codeforces.com/api/problemset.problems"
-        # День все было нормально запросы уходили раз в час
-        # После чего блокнуло и возвращало 403
-        # Ответа не было даже с апи ключом решил к запросу добавить куки и хедеры из браузера
-        # Странное у них апи
+        # День все было нормально запросы уходили раз в час.
+        # После чего блокнуло и возвращало 403.
+        # Ответа не было даже с апи ключом, странное у них апи.
+        # Пришлось использовать selenium.
+        url = f"{self.base_url}problemset.problems"
+
+        cookies, headers = get_fresh_cookies_and_headers(self.base_url)
+
         async with aiohttp.ClientSession(headers=headers, cookies=cookies) as session:
             try:
                 async with session.get(url) as response:
