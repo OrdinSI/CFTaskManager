@@ -84,7 +84,6 @@ class Parser:
                 "rating": rating,
                 "url": url,
                 "solved_count": solved_count,
-                "subject": tags
             })
 
             if not created:
