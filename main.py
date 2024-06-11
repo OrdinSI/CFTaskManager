@@ -3,9 +3,11 @@ import logging
 import signal
 import sys
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from tortoise import Tortoise
-from src.settings import TORTOISE_ORM
 
+from src.parser.parser import Parser
+from src.settings import TORTOISE_ORM
 
 logging.basicConfig(
     stream=sys.stdout,
@@ -13,14 +15,15 @@ logging.basicConfig(
     format='%(asctime)s [%(levelname)s] %(module)s:  [%(funcName)s] %(message)s'
 )
 
-
 logging.info(f'Starting app..')
+
+
 
 async def run_db():
     try:
         logging.info('Starting database...')
         await Tortoise.init(config=TORTOISE_ORM)
-        await Tortoise.generate_schemas()
+        await Tortoise.generate_schemas(safe=True)
     except Exception as e:
         logging.error(e)
 
@@ -34,6 +37,17 @@ def signal_handler(sig, frame):
     asyncio.get_event_loop().stop()
 
 
+async def start_scheduler():
+    """ Start scheduler. """
+    try:
+        parser = Parser()
+        scheduler = AsyncIOScheduler()
+        scheduler.add_job(parser.parse, 'interval', seconds=3600)
+        scheduler.start()
+    except Exception as e:
+        logging.error(f"Ошибка при запуске задачи: {e}")
+
+
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
 
@@ -42,6 +56,7 @@ if __name__ == "__main__":
 
     try:
         loop.run_until_complete(run_db())
+        loop.run_until_complete(start_scheduler())
         loop.run_forever()
     except KeyboardInterrupt:
         pass
