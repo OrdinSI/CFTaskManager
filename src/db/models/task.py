@@ -37,10 +37,28 @@ class Task(AbstractBaseModel):
     solved_count = fields.BigIntField(default=0)
     rating = fields.BigIntField(default=0)
     url = fields.CharField(150)
-    used_in_contest = fields.BooleanField(default=False)
 
     class Meta:
         table = "tasks"
+
+    def __str__(self):
+        return self.name
+
+
+class Contest(AbstractBaseModel):
+    """
+    Model for contests
+
+    :param name: название контеста Тема + Сложность
+    :param subject: основная тема контеста
+
+    """
+    name = fields.CharField(255, unique=True)
+    subject = fields.ForeignKeyField("models.Subject", related_name="contests", on_delete=fields.CASCADE)
+    tasks = fields.ManyToManyField("models.Task", related_name="contests")
+
+    class Meta:
+        table = "contests"
 
     def __str__(self):
         return self.name

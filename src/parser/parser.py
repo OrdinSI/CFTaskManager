@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from src.db.models.task import Subject, Task
+from src.db.models.task import Contest, Subject, Task
 
 
 class Parser:
@@ -67,16 +67,28 @@ class Parser:
         for problem in problems:
             name = problem.get("name", "")
             number = f"{problem.get('contestId', 0)}{problem.get('index', '')}"
-            rating = problem.get("rating")
+            rating = problem.get("rating", 0)
             url = f"https://codeforces.com/problemset/problem/{problem.get('contestId')}/{problem.get('index')}"
             solved_count = problem_statistics.get(number, 0)
 
             tags = []
+            first_tag = None
 
-            for tag in problem.get("tags", []):
+            # Берем первый тег
+            for idx, tag in enumerate(problem.get("tags", [])):
+                if idx == 0:
+                    first_tag = tag
                 subject = tags_map.get(tag)
                 if subject:
                     tags.append(subject)
+
+            if not first_tag:
+                logging.warning(f"Problem {number} пропущен потому что отсутствуют теги.")
+                continue
+
+            # Create contest
+            contest_name = f"{first_tag}_{rating}"
+            contest, created = await Contest.get_or_create(name=contest_name, subject=tags_map[first_tag])
 
             # Create or update task
             task, created = await Task.get_or_create(number=number, defaults={
@@ -95,3 +107,5 @@ class Parser:
 
             await task.subject.clear()
             await task.subject.add(*tags)
+
+            await contest.tasks.add(task)
