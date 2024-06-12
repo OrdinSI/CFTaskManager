@@ -15,7 +15,7 @@ class TaskKeyboard:
 
         buttons = []
         for subject in subjects:
-            callback_data = str(subject.tag) if subject.tag else "empty"
+            callback_data = f"tag_{str(subject.tag)}" if subject.tag else "tag_empty"
             buttons.append([InlineKeyboardButton(text=subject.name, callback_data=callback_data)])
 
         navigation_buttons = []
