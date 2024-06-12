@@ -53,7 +53,7 @@ class Contest(AbstractBaseModel):
     :param subject: основная тема контеста
 
     """
-    name = fields.CharField(255, unique=True)
+    name = fields.CharField(255)
     subject = fields.ForeignKeyField("models.Subject", related_name="contests", on_delete=fields.CASCADE)
     tasks = fields.ManyToManyField("models.Task", related_name="contests")
 

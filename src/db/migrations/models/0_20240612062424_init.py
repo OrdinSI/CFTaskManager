@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "contests" (
     "id" BIGSERIAL NOT NULL PRIMARY KEY,
     "created_at" TIMESTAMPTZ   DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ   DEFAULT CURRENT_TIMESTAMP,
-    "name" VARCHAR(255) NOT NULL UNIQUE,
+    "name" VARCHAR(255) NOT NULL,
     "subject_id" BIGINT NOT NULL REFERENCES "subjects" ("id") ON DELETE CASCADE
 );
 COMMENT ON TABLE "contests" IS 'Model for contests';

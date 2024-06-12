@@ -27,7 +27,7 @@ async def init():
         Subject(tag="combinatorics", name="Комбинаторика"),
         Subject(tag="bitmasks", name="Битовые маски"),
         Subject(tag="two pointers", name="Два указателя"),
-        Subject(tag="special", name="Специальные задачи"),
+        Subject(tag="*special", name="Специальные задачи"),
         Subject(tag="geometry", name="Геометрия"),
         Subject(tag="dsu", name="Система непересекающихся множеств (DSU)"),
         Subject(tag="divide and conquer", name="Разделяй и властвуй"),
@@ -46,7 +46,8 @@ async def init():
         Subject(tag="expression parsing", name="Разбор выражений"),
         Subject(tag="2-sat", name="2-SAT задача"),
         Subject(tag="chinese remainder theorem", name="Китайская теорема об остатках (CRT)"),
-        Subject(tag="schedules", name="Расписания")
+        Subject(tag="schedules", name="Расписания"),
+        Subject(tag="", name="Без тега"),
     ]
 
     await Subject.bulk_create(subject)
