@@ -10,6 +10,9 @@ from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MI
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from tortoise import Tortoise
 
+from src.bot.controllers.start import StartController
+from src.bot.models.user_model import UserModel
+from src.bot.views.chat_view import ChatView
 from src.parser.parser import Parser
 from src.settings import TORTOISE_ORM, BOT_TOKEN
 
@@ -21,6 +24,12 @@ class AppManager:
         self.scheduler = None
         self.bot = Bot(token=BOT_TOKEN)
         self.dp = Dispatcher(storage=MemoryStorage())
+
+        self.chat_view = ChatView(self.bot)
+        self.start_model = UserModel()
+        self.start_controller = StartController(self.chat_view, self.start_model)
+
+        self.dp.include_router(self.start_controller.router)
 
     def setup_signals(self, loop):
         """ Setup signals. """
@@ -65,8 +74,8 @@ class AppManager:
         """ Start scheduler. """
         try:
             parser = Parser()
-            self.scheduler = AsyncIOScheduler(job_defaults={'misfire_grace_time': 60})
-            self.scheduler.add_job(parser.parse, 'interval', seconds=300)
+            self.scheduler = AsyncIOScheduler(job_defaults={'misfire_grace_time': 600})
+            self.scheduler.add_job(parser.parse, 'interval', seconds=3600)
             self.scheduler.add_listener(self.job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)
             self.scheduler.start()
             logging.info('Started task.')

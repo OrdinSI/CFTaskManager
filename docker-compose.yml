@@ -29,17 +29,6 @@ services:
         echo 'Waiting for database...';
         sleep 1;
       done &&
-      if [ ! -f src/db/migrations/.init_done ]; then
-              echo 'Running aerich init' &&
-              aerich init -t src.settings.TORTOISE_ORM --location src/db/migrations &&
-              echo 'Running aerich init-db' &&
-              aerich init-db &&
-              touch src/db/migrations/.init_done;
-      fi &&
-      echo 'Running aerich migrate' &&
-      aerich migrate &&
-      echo 'Running aerich upgrade' &&
-      aerich upgrade &&
       python main.py"
 
 volumes:
