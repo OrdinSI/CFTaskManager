@@ -6,12 +6,10 @@ class TaskModel:
     def __init__(self):
         pass
 
-    async def get_tasks(self):
+    async def get_contests(self):
         """ Get tasks. """
-        tasks = await Contest.all()
-        return tasks
+        return await Contest.all()
 
     async def get_subjects(self):
         """ Get subjects. """
-        subjects = await Subject.all()
-        return subjects
+        return await Subject.all()

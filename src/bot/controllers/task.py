@@ -16,6 +16,7 @@ class TaskController:
         self.router.message.register(self.cmd_task, Command("tasks"))
         self.router.callback_query.register(self.handle_callback_subject, lambda x: x.data.startswith("page_"))
         self.router.callback_query.register(self.handle_callback_exit, lambda x: x.data == "exit_subjects")
+        self.router.callback_query.register(self.handle_callback_rating, lambda x: x.data.startswith("tag_"))
 
     async def cmd_task(self, message: types.Message):
         """ Command for tasks. """
@@ -39,4 +40,16 @@ class TaskController:
         user_id = callback_query.from_user.id
         await self.chat_view.delete_message(callback_query.message)
         await self.chat_view.send_message(user_id, EXIT_MESSAGE)
+        await self.chat_view.answer_callback_query(callback_query)
+
+    async def handle_callback_rating(self, callback_query: types.CallbackQuery):
+        """ Handle callback for rating. """
+        data = callback_query.data
+        tag = data.split("_")[1]
+
+        contests = await self.tasks_model.get_contests()
+        ratings = [contest.name.split("_")[1] for contest in contests if contest.name.split("_")[0] == tag]
+
+        keyboard = await self.task_keyboard.keyboard_ratings(ratings, page=1)
+        await self.chat_view.edit_message_reply_markup(callback_query.message, reply_markup=keyboard)
         await self.chat_view.answer_callback_query(callback_query)
