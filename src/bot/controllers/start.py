@@ -14,14 +14,14 @@ class StartController:
 
     async def cmd_start(self, message: types.Message):
         """ Start command. """
-        chat_id = message.chat.id
+        user_id = message.from_user.id
         user_name = message.from_user.username if message.from_user.username else "Пользователь"
 
-        user = await self.start_model.get_user(chat_id)
+        user = await self.start_model.get_user(user_id)
         if not user:
-            await self.start_model.create_user(chat_id, user_name)
+            await self.start_model.create_user(user_id, user_name)
 
-        await self.chat_view.send_message(chat_id, NEW_USER_GREETING.format(user_name))
+        await self.chat_view.send_message(user_id, NEW_USER_GREETING.format(user_name))
 
 
 

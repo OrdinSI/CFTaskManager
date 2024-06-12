@@ -40,7 +40,7 @@ class Parser:
         # После чего блокнуло и возвращало 403.
         # Ответа не было даже с апи ключом, странное у них апи.
         # Пришлось использовать selenium.
-        url = f"{self.base_url}problemset.problems"
+        url = f"{self.base_url}problemset.problems?lang=ru"
 
         cookies, headers = get_fresh_cookies_and_headers(self.base_url)
         logging.info("Получение свежих cookies и заголовков.")

@@ -11,8 +11,11 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from tortoise import Tortoise
 
 from src.bot.controllers.start import StartController
+from src.bot.controllers.task import TaskController
+from src.bot.models.task_model import TaskModel
 from src.bot.models.user_model import UserModel
 from src.bot.views.chat_view import ChatView
+from src.bot.views.task_keyboard import TaskKeyboard
 from src.parser.parser import Parser
 from src.settings import TORTOISE_ORM, BOT_TOKEN
 
@@ -27,9 +30,14 @@ class AppManager:
 
         self.chat_view = ChatView(self.bot)
         self.start_model = UserModel()
+        self.tasks_model = TaskModel()
+        self.task_keyboard = TaskKeyboard()
         self.start_controller = StartController(self.chat_view, self.start_model)
+        self.task_controller = TaskController(self.chat_view, self.tasks_model, self.task_keyboard)
 
         self.dp.include_router(self.start_controller.router)
+        self.dp.include_router(self.task_controller.router)
+
 
     def setup_signals(self, loop):
         """ Setup signals. """
