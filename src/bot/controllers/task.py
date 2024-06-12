@@ -1,9 +1,7 @@
-import logging
-
 from aiogram import Router, types
 from aiogram.filters import Command
 
-from src.bot.messages import TASKS_MESSAGE_KEYBOARD, EXIT_MESSAGE
+from src.bot.messages import EXIT_MESSAGE, TASKS_MESSAGE_KEYBOARD
 
 
 class TaskController:

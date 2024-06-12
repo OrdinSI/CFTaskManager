@@ -18,4 +18,3 @@ class UserModel:
             user.user_id = user_id
             user.user_name = user_name
             await user.save()
-

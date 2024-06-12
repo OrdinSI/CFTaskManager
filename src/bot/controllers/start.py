@@ -22,6 +22,3 @@ class StartController:
             await self.start_model.create_user(user_id, user_name)
 
         await self.chat_view.send_message(user_id, NEW_USER_GREETING.format(user_name))
-
-
-
