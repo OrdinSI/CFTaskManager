@@ -3,18 +3,24 @@ import logging
 import signal
 import sys
 
+import aiohttp
+from aiogram import exceptions, Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MISSED
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from tortoise import Tortoise
 
 from src.parser.parser import Parser
-from src.settings import TORTOISE_ORM
+from src.settings import TORTOISE_ORM, BOT_TOKEN
 
 
 class AppManager:
     """ App manager. """
+
     def __init__(self):
         self.scheduler = None
+        self.bot = Bot(token=BOT_TOKEN)
+        self.dp = Dispatcher(storage=MemoryStorage())
 
     def setup_signals(self, loop):
         """ Setup signals. """
@@ -40,6 +46,8 @@ class AppManager:
         if self.scheduler:
             logging.info("Scheduler shutting down...")
             self.scheduler.shutdown(wait=False)
+        await self.dp.storage.close()
+        await self.bot.session.close()
         await self.close_db()
         asyncio.get_event_loop().stop()
 
@@ -68,9 +76,17 @@ class AppManager:
 
     async def start_bot(self):
         """ Start bot. """
-        # Здесь будет код для старта бота
         logging.info('Starting bot...')
-        await asyncio.sleep(1)
+        while True:
+            try:
+                await self.dp.start_polling(self.bot)
+                break
+            except (aiohttp.ClientConnectorError, exceptions.TelegramAPIError) as e:
+                logging.error(f"Произошла ошибка при подключении к Telegram API: {e}")
+                await asyncio.sleep(5)
+            except Exception as e:
+                logging.error(f"Произошла ошибка при запуске бота: {e}")
+                await asyncio.sleep(5)
 
 
 if __name__ == "__main__":
