@@ -1,6 +1,8 @@
-from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MISSED
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import logging
+
+from apscheduler.events import (EVENT_JOB_ERROR, EVENT_JOB_EXECUTED,
+                                EVENT_JOB_MISSED)
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
 class ParserManager:

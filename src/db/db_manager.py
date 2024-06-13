@@ -1,6 +1,8 @@
-from src.settings import TORTOISE_ORM
-from tortoise import Tortoise
 import logging
+
+from tortoise import Tortoise
+
+from src.settings import TORTOISE_ORM
 
 
 class DBManager:
