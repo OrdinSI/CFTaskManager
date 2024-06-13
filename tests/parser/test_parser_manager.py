@@ -36,7 +36,7 @@ async def test_job_listener(parser_manager):
 
 @pytest.mark.asyncio
 async def test_start_scheduler(parser_manager):
-    with patch.object(AsyncIOScheduler, 'start', new_callable=AsyncMock) as mock_start, \
+    with patch.object(AsyncIOScheduler, 'start') as mock_start, \
             patch.object(AsyncIOScheduler, 'add_job') as mock_add_job, \
             patch.object(AsyncIOScheduler, 'add_listener') as mock_add_listener:
         await parser_manager.start_scheduler()
@@ -44,7 +44,7 @@ async def test_start_scheduler(parser_manager):
         assert parser_manager.scheduler is not None
         mock_add_job.assert_called_once_with(parser_manager.parser.parse, 'interval', seconds=3600)
         mock_add_listener.assert_called_once()
-        mock_start.assert_awaited_once()
+        mock_start.assert_called_once()
 
 
 @pytest.mark.asyncio
