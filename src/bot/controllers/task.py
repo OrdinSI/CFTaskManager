@@ -140,7 +140,10 @@ class TaskController:
                 if task.id == task_id:
 
                     await self.chat_view.delete_message(callback_query.message)
-                    await self.chat_view.send_message(callback_query.from_user.id, TASK_INFO.format(task.name, task.rating, task.solved_count, task.url))
+                    await self.chat_view.send_message(
+                        callback_query.from_user.id,
+                        TASK_INFO.format(task.name, task.rating, task.solved_count, task.url)
+                    )
             await self.chat_view.answer_callback_query(callback_query)
         except Exception as e:
             logging.error(f"Ошибка при обработке handle_callback_task_info: {e}", exc_info=True)
