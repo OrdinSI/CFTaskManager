@@ -28,8 +28,7 @@ class TaskController:
             self.handle_callback_subject, lambda x: x.data.startswith("page_"), TaskState.subject)
         self.router.callback_query.register(self.handle_callback_exit, lambda x: x.data == "exit_subjects")
         self.router.callback_query.register(self.handle_callback_rating, lambda x: x.data.startswith("tag_"))
-        self.router.callback_query.register(
-            self.handle_callback_task, lambda x: x.data.startswith("task_"))
+        self.router.callback_query.register(self.handle_callback_task, lambda x: x.data.startswith("task_"))
         self.router.callback_query.register(
             self.handle_callback_task_page, lambda x: x.data.startswith("tk_page_"), TaskState.task)
 
