@@ -38,7 +38,6 @@ class AppManager:
         self.dp.include_router(self.start_controller.router)
         self.dp.include_router(self.task_controller.router)
 
-
     def setup_signals(self, loop):
         """ Setup signals. """
         loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(self.shutdown(signal.SIGINT)))

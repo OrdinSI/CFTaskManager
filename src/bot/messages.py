@@ -5,10 +5,13 @@ NEW_USER_GREETING = """
 Чтобы начать, введи команду <b>/tasks</b>.
 """
 
-TASKS_MESSAGE_KEYBOARD = """
-👇Выберите тему задачи:
+TAG_RATING_MESSAGE_KEYBOARD = """
+👇Выберите тему и сложность задачи:
 """
 
 EXIT_MESSAGE = """
 Чтобы начать заново, введите команду <b>/tasks</b>.
+"""
+TASK_MESSAGE_KEYBOARD = """
+👇Выберите задачу:
 """

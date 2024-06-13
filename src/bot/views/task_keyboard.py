@@ -3,6 +3,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 class TaskKeyboard:
     """ Task keyboard. """
+
     def __init__(self):
         pass
 
@@ -15,7 +16,7 @@ class TaskKeyboard:
 
         buttons = []
         for subject in subjects:
-            callback_data = f"tag_{str(subject.tag)}" if subject.tag else "tag_empty"
+            callback_data = f"tag_{subject.tag}" if subject.tag else "tag_empty"
             buttons.append([InlineKeyboardButton(text=subject.name, callback_data=callback_data)])
 
         navigation_buttons = []
@@ -32,29 +33,39 @@ class TaskKeyboard:
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         return keyboard
 
-    async def keyboard_ratings(self, ratings, page: int = 1, page_size: int = 15):
+    async def keyboard_ratings(self, ratings, tag):
         """ Keyboard for ratings. """
-        total_pages = (len(ratings) + page_size - 1) // page_size
-        start = (page - 1) * page_size
-        end = start + page_size
-        ratings = ratings[start:end]
 
         buttons = []
-
-        # Разбиваем на строки по пять кнопок в каждой
         for i in range(0, len(ratings), 5):
             row_buttons = []
             for rating in ratings[i:i + 5]:
-                callback_data = f"rating_{str(rating)}" if rating else "rating_empty"
+                callback_data = f"task_{tag}_{rating}"
                 row_buttons.append(InlineKeyboardButton(text=rating, callback_data=callback_data))
             buttons.append(row_buttons)
 
-        navigation_buttons = []
+        buttons.append([InlineKeyboardButton(text="Выход", callback_data="exit_subjects")])
 
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        return keyboard
+
+    async def keyboard_tasks(self, tasks, page: int = 1, page_size: int = 10):
+        """ Keyboard for tasks"""
+        total_pages = (len(tasks) + page_size - 1) // page_size
+        start = (page - 1) * page_size
+        end = start + page_size
+        tasks = tasks[start:end]
+
+        buttons = []
+        for task in tasks:
+            callback_data = f"id_{task.id}"
+            buttons.append([InlineKeyboardButton(text=task.name, callback_data=callback_data)])
+
+        navigation_buttons = []
         if page > 1:
-            navigation_buttons.append(InlineKeyboardButton(text="⬅️ Назад", callback_data=f"ratpage_{page - 1}"))
+            navigation_buttons.append(InlineKeyboardButton(text="⬅️ Назад", callback_data=f"tk_page_{page - 1}"))
         if page < total_pages:
-            navigation_buttons.append(InlineKeyboardButton(text="Вперед ➡️", callback_data=f"ratpage_{page + 1}"))
+            navigation_buttons.append(InlineKeyboardButton(text="Вперед ➡️", callback_data=f"tk_page_{page + 1}"))
 
         if navigation_buttons:
             buttons.append(navigation_buttons)
@@ -63,3 +74,5 @@ class TaskKeyboard:
 
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         return keyboard
+
+
