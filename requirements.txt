@@ -7,3 +7,7 @@ APScheduler~=3.10.4
 aiohttp==3.9.5
 selenium~=4.21.0
 aiogram~=3.7.0
+pytest~=7.4.2
+pytest-asyncio==0.23.7
+pytest-cov==5.0.0
+pytest-mock==3.14.0
