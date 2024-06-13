@@ -5,7 +5,7 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
-from src.bot.messages import EXIT_MESSAGE, TAG_RATING_MESSAGE_KEYBOARD, TASK_MESSAGE_KEYBOARD
+from src.bot.messages import EXIT_MESSAGE, TAG_RATING_MESSAGE_KEYBOARD, TASK_MESSAGE_KEYBOARD, TASK_INFO
 
 
 class TaskState(StatesGroup):
@@ -31,6 +31,7 @@ class TaskController:
         self.router.callback_query.register(self.handle_callback_task, lambda x: x.data.startswith("task_"))
         self.router.callback_query.register(
             self.handle_callback_task_page, lambda x: x.data.startswith("tk_page_"), TaskState.task)
+        self.router.callback_query.register(self.handle_callback_task_info, lambda x: x.data.startswith("id_"))
 
     async def cmd_task(self, message: types.Message, state: FSMContext):
         """ Command for tasks. """
@@ -120,9 +121,25 @@ class TaskController:
             page = int(data.split("_")[2])
             state_data = await state.get_data()
             tasks = state_data.get("tasks", [])
-
             keyboard = await self.task_keyboard.keyboard_tasks(tasks, page=page)
             await self.chat_view.edit_message_reply_markup(callback_query.message, reply_markup=keyboard)
             await self.chat_view.answer_callback_query(callback_query)
         except Exception as e:
             logging.error(f"Ошибка при обработке handle_callback_task_page: {e}", exc_info=True)
+
+    async def handle_callback_task_info(self, callback_query: types.CallbackQuery, state: FSMContext):
+        """ Handle callback for task info. """
+        try:
+            data = callback_query.data
+            task_id = int(data.split("_")[1])
+
+            state_data = await state.get_data()
+            tasks = state_data.get("tasks", [])
+            for task in tasks:
+                if task.id == task_id:
+
+                    await self.chat_view.delete_message(callback_query.message)
+                    await self.chat_view.send_message(callback_query.from_user.id, TASK_INFO.format(task.name, task.rating, task.solved_count, task.url))
+            await self.chat_view.answer_callback_query(callback_query)
+        except Exception as e:
+            logging.error(f"Ошибка при обработке handle_callback_task_info: {e}", exc_info=True)
