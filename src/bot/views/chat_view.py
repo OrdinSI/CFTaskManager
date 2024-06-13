@@ -1,6 +1,3 @@
-import logging
-
-
 class ChatView:
     """ Chat view. """
 
@@ -69,4 +66,3 @@ class ChatView:
             )
         except Exception as e:
             raise e
-

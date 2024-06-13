@@ -1,5 +1,3 @@
-import logging
-
 from src.db.models.task import Contest, Subject
 
 

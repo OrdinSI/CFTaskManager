@@ -1,11 +1,12 @@
 import logging
 
-from aiogram.filters.state import State, StatesGroup
 from aiogram import Router, types
 from aiogram.filters import Command
+from aiogram.filters.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
-from src.bot.messages import EXIT_MESSAGE, TAG_RATING_MESSAGE_KEYBOARD, TASK_MESSAGE_KEYBOARD, TASK_INFO
+from src.bot.messages import (EXIT_MESSAGE, TAG_RATING_MESSAGE_KEYBOARD,
+                              TASK_INFO, TASK_MESSAGE_KEYBOARD)
 
 
 class TaskState(StatesGroup):

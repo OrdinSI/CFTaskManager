@@ -74,5 +74,3 @@ class TaskKeyboard:
 
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         return keyboard
-
-
