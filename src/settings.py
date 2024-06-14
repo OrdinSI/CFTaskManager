@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,8 +19,11 @@ TORTOISE_ORM = {
     },
     "apps": {
         "models": {
-            "models": ["aerich.models"],
+            "models": ["src.db.models.task", "src.db.models.user", "aerich.models"],
             "default_connection": "default",
         }
     },
 }
+
+
+BOT_TOKEN = os.getenv('BOT_TOKEN')
