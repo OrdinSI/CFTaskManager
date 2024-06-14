@@ -1,3 +1,5 @@
+from typing import List
+
 from src.db.models.task import Contest, Subject
 
 
@@ -8,7 +10,7 @@ class TaskModel:
         pass
 
     @staticmethod
-    async def get_contests_by_subject(tag):
+    async def get_contests_by_subject(tag: str) -> List[Contest]:
         """ Get tasks. """
         try:
             return await Contest.filter(subject__tag=tag).all()
@@ -16,7 +18,7 @@ class TaskModel:
             raise e
 
     @staticmethod
-    async def get_subjects():
+    async def get_subjects() -> List[Subject]:
         """ Get subjects. """
         try:
             return await Subject.all()
@@ -24,7 +26,7 @@ class TaskModel:
             raise e
 
     @staticmethod
-    async def get_tasks_by_tag_and_rating(tag, rating):
+    async def get_tasks_by_tag_and_rating(tag: str, rating: str) -> List[Contest]:
         """ Get tasks. """
         try:
             pattern = f"{tag}_{rating}_"

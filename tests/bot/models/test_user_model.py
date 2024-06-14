@@ -31,4 +31,3 @@ async def test_create_user():
 
             mock_get_or_create.assert_called_once_with(user_id=user_id, user_name=user_name)
             mock_save.assert_awaited_once()
-

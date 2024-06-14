@@ -3,7 +3,6 @@ import logging
 from tortoise import Tortoise
 from src.db.db_manager import DBManager
 
-
 TORTOISE_ORM = {
     "connections": {
         "default": "sqlite://:memory:"

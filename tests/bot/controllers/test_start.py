@@ -10,7 +10,6 @@ from src.db.models.user import User
 
 @pytest.fixture
 def start_controller():
-    """ Фикстура для создания экземпляра StartController. """
     chat_view = AsyncMock()
     start_model = AsyncMock()
     return StartController(chat_view=chat_view, start_model=start_model)
@@ -18,7 +17,6 @@ def start_controller():
 
 @pytest.fixture
 def mock_message():
-    """ Фикстура для создания мок-объекта сообщения. """
     user = TelegramUser(id=123456, is_bot=False, first_name="Test", username="testuser")
     chat = Chat(id=123456, type="private", title="Test Chat")
     msg = Message(message_id=1, from_user=user, chat=chat, date=datetime.datetime.now(), text="/start")
@@ -27,7 +25,6 @@ def mock_message():
 
 @pytest.mark.asyncio
 async def test_cmd_start_new_user(start_controller, mock_message):
-    """ Тест выполнения команды /start для нового пользователя. """
     start_controller.start_model.get_user.return_value = None
     await start_controller.cmd_start(mock_message)
 
@@ -38,7 +35,6 @@ async def test_cmd_start_new_user(start_controller, mock_message):
 
 @pytest.mark.asyncio
 async def test_cmd_start_existing_user(start_controller, mock_message):
-    """ Тест выполнения команды /start для существующего пользователя. """
     existing_user = User(user_id=123456, user_name="testuser")
     start_controller.start_model.get_user.return_value = existing_user
     await start_controller.cmd_start(mock_message)

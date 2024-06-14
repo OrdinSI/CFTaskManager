@@ -5,7 +5,6 @@ from src.bot.models.task_model import TaskModel
 from src.db.models.task import Contest, Subject
 
 
-
 @pytest.mark.asyncio
 async def test_get_contests_by_subject():
     tag = "math"
@@ -53,4 +52,3 @@ async def test_get_tasks_by_tag_and_rating():
 
         mock_filter.assert_called_once_with(name__icontains=pattern)
         assert result == tasks_mock * 2
-
