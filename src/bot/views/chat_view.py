@@ -27,14 +27,16 @@ class ChatView:
         except Exception as e:
             raise e
 
-    async def delete_message(self, message):
+    @staticmethod
+    async def delete_message(message):
         """ Delete message. """
         try:
             await message.delete()
         except Exception as e:
             raise e
 
-    async def edit_message_reply_markup(self, message, reply_markup):
+    @staticmethod
+    async def edit_message_reply_markup(message, reply_markup):
         """ Edit message reply markup """
         try:
             if message:
@@ -44,7 +46,8 @@ class ChatView:
         except Exception as e:
             raise e
 
-    async def answer_callback_query(self, callback_query, text: str = None, show_alert: bool = False):
+    @staticmethod
+    async def answer_callback_query(callback_query, text: str = None, show_alert: bool = False):
         """ Answer callback query """
         try:
             await callback_query.answer(

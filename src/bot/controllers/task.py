@@ -18,9 +18,9 @@ class TaskState(StatesGroup):
 class TaskController:
     """ Controller for tasks command. """
 
-    def __init__(self, chat_view, tasks_model, task_keyboard):
+    def __init__(self, chat_view, task_model, task_keyboard):
         self.chat_view = chat_view
-        self.tasks_model = tasks_model
+        self.task_model = task_model
         self.task_keyboard = task_keyboard
         self.router = Router()
 
@@ -39,7 +39,7 @@ class TaskController:
         try:
             await state.set_state(TaskState.subject)
             user_id = message.from_user.id
-            subjects = await self.tasks_model.get_subjects()
+            subjects = await self.task_model.get_subjects()
             await state.update_data(subjects=subjects)
             keyboard = await self.task_keyboard.keyboard_subjects(subjects, page=1)
             await self.chat_view.send_message_with_keyboard(user_id, TAG_RATING_MESSAGE_KEYBOARD, reply_markup=keyboard)
@@ -79,7 +79,7 @@ class TaskController:
             if tag == "empty":
                 tag = ""
 
-            contests = await self.tasks_model.get_contests_by_subject(tag)
+            contests = await self.task_model.get_contests_by_subject(tag)
             ratings = list(
                 set(int(contest.name.split("_")[1]) for contest in contests if contest.name.split("_")[0] == tag)
             )
@@ -102,7 +102,7 @@ class TaskController:
             tag = data.split("_")[1]
             rating = data.split("_")[2]
 
-            tasks = await self.tasks_model.get_tasks_by_tag_and_rating(tag, rating)
+            tasks = await self.task_model.get_tasks_by_tag_and_rating(tag, rating)
             await state.update_data(tasks=tasks)
 
             keyboard = await self.task_keyboard.keyboard_tasks(tasks)

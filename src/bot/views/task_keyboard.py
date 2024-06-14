@@ -7,7 +7,8 @@ class TaskKeyboard:
     def __init__(self):
         pass
 
-    async def keyboard_subjects(self, subjects, page: int = 1, page_size: int = 10):
+    @staticmethod
+    async def keyboard_subjects(subjects, page: int = 1, page_size: int = 10):
         """ Keyboard for subjects. """
         total_pages = (len(subjects) + page_size - 1) // page_size
         start = (page - 1) * page_size
@@ -33,7 +34,8 @@ class TaskKeyboard:
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         return keyboard
 
-    async def keyboard_ratings(self, ratings, tag):
+    @staticmethod
+    async def keyboard_ratings(ratings, tag):
         """ Keyboard for ratings. """
 
         buttons = []
@@ -49,7 +51,8 @@ class TaskKeyboard:
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         return keyboard
 
-    async def keyboard_tasks(self, tasks, page: int = 1, page_size: int = 10):
+    @staticmethod
+    async def keyboard_tasks(tasks, page: int = 1, page_size: int = 10):
         """ Keyboard for tasks"""
         total_pages = (len(tasks) + page_size - 1) // page_size
         start = (page - 1) * page_size

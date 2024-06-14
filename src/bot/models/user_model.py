@@ -7,11 +7,13 @@ class UserModel:
     def __init__(self):
         pass
 
-    async def get_user(self, user_id):
+    @staticmethod
+    async def get_user(user_id):
         """ Get user. """
         return await User.get_or_none(user_id=user_id)
 
-    async def create_user(self, user_id, user_name):
+    @staticmethod
+    async def create_user(user_id, user_name):
         """ Create user. """
         user, created = await User.get_or_create(user_id=user_id, user_name=user_name)
         if not created:

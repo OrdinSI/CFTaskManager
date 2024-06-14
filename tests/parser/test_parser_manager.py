@@ -1,11 +1,9 @@
 import pytest
 from unittest.mock import AsyncMock, create_autospec, patch
-
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-
+from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MISSED
 from src.parser.codeforces.parser import Parser
 from src.parser.parser_manager import ParserManager
-from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MISSED
 
 
 @pytest.fixture
@@ -24,9 +22,9 @@ async def test_job_listener(parser_manager):
                                 traceback='traceback')
         event_missed = AsyncMock(code=EVENT_JOB_MISSED, job_id='test_job', scheduled_run_time='now')
 
-        parser_manager.job_listener(event_executed, event_error)
-        parser_manager.job_listener(event_error, event_missed)
-        parser_manager.job_listener(event_missed, event_executed)
+        parser_manager.job_listener(event_executed)
+        parser_manager.job_listener(event_error)
+        parser_manager.job_listener(event_missed)
 
         mock_logging_info.assert_any_call('Job test_job executed successfully at now')
         mock_logging_error.assert_any_call('Job test_job failed with exception: Test error')

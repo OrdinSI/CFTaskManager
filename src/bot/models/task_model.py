@@ -7,21 +7,24 @@ class TaskModel:
     def __init__(self):
         pass
 
-    async def get_contests_by_subject(self, tag):
+    @staticmethod
+    async def get_contests_by_subject(tag):
         """ Get tasks. """
         try:
             return await Contest.filter(subject__tag=tag).all()
         except Exception as e:
             raise e
 
-    async def get_subjects(self):
+    @staticmethod
+    async def get_subjects():
         """ Get subjects. """
         try:
             return await Subject.all()
         except Exception as e:
             raise e
 
-    async def get_tasks_by_tag_and_rating(self, tag, rating):
+    @staticmethod
+    async def get_tasks_by_tag_and_rating(tag, rating):
         """ Get tasks. """
         try:
             pattern = f"{tag}_{rating}_"

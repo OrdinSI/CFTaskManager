@@ -26,8 +26,8 @@ class ParserManager:
     async def start_scheduler(self):
         """ Start scheduler. """
         try:
-            self.scheduler = AsyncIOScheduler(job_defaults={'misfire_grace_time': 60})
-            self.scheduler.add_job(self.parser.parse, 'interval', seconds=300)
+            self.scheduler = AsyncIOScheduler(job_defaults={'misfire_grace_time': 600})
+            self.scheduler.add_job(self.parser.parse, 'interval', seconds=3600)
             self.scheduler.add_listener(self.job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)
             self.scheduler.start()
             logging.info('Started task.')

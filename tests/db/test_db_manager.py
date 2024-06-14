@@ -1,27 +1,42 @@
 import pytest
-from unittest.mock import AsyncMock, patch
-
+import logging
+from tortoise import Tortoise
 from src.db.db_manager import DBManager
-from src.settings import TORTOISE_ORM
 
 
-@pytest.fixture
-def db_manager():
-    return DBManager()
+TORTOISE_ORM = {
+    "connections": {
+        "default": "sqlite://:memory:"
+    },
+    "apps": {
+        "models": {
+            "models": ["src.db.models.task", "src.db.models.user", "aerich.models"],
+            "default_connection": "default",
+        }
+    }
+}
+
+
+@pytest.fixture(scope="module", autouse=True)
+async def init_db():
+    await Tortoise.init(config=TORTOISE_ORM)
+    yield
+    await Tortoise.close_connections()
 
 
 @pytest.mark.asyncio
-async def test_run_db(db_manager):
-    with patch('src.db.db_manager.Tortoise.init', new_callable=AsyncMock) as mock_init, \
-            patch('src.db.db_manager.Tortoise.generate_schemas', new_callable=AsyncMock) as mock_generate_schemas:
-        await db_manager.run_db()
+async def test_run_db(caplog):
+    caplog.set_level(logging.INFO)
 
-        mock_init.assert_called_once_with(config=TORTOISE_ORM)
-        mock_generate_schemas.assert_called_once_with(safe=True)
+    await DBManager.run_db()
+
+    assert "Starting db..." in caplog.text
 
 
 @pytest.mark.asyncio
-async def test_close_db(db_manager):
-    with patch('src.db.db_manager.Tortoise.close_connections', new_callable=AsyncMock) as mock_close_connections:
-        await db_manager.close_db()
-        mock_close_connections.assert_called_once()
+async def test_close_db(caplog):
+    caplog.set_level(logging.INFO)
+
+    await DBManager.close_db()
+
+    assert "Closing db..." in caplog.text

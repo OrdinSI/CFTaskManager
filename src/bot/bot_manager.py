@@ -21,10 +21,10 @@ class BotManager:
 
         self.chat_view = ChatView(self.bot)
         self.start_model = UserModel()
-        self.tasks_model = TaskModel()
+        self.task_model = TaskModel()
         self.task_keyboard = TaskKeyboard()
         self.start_controller = StartController(self.chat_view, self.start_model)
-        self.task_controller = TaskController(self.chat_view, self.tasks_model, self.task_keyboard)
+        self.task_controller = TaskController(self.chat_view, self.task_model, self.task_keyboard)
 
         self.dp.include_router(self.start_controller.router)
         self.dp.include_router(self.task_controller.router)
