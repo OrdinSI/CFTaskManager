@@ -2,7 +2,6 @@ import asyncio
 import logging
 import signal
 import sys
-import platform
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -33,13 +32,17 @@ class AppManager:
     async def shutdown(self, sig):
         """ Shutdown. """
         logging.info(f"Stopping signal {sig.name}...")
-        if self.scheduler_manager:
-            logging.info("Scheduler shutting down...")
-            await self.scheduler_manager.shutdown()
-        await self.dp.storage.close()
-        await self.bot.session.close()
-        await self.db_manager.close_db()
-        asyncio.get_event_loop().stop()
+        try:
+            if self.scheduler_manager:
+                logging.info("Scheduler shutting down...")
+                await self.scheduler_manager.shutdown()
+            await self.dp.storage.close()
+            await self.bot.session.close()
+            await self.db_manager.close_db()
+        except Exception as e:
+            logging.error(f"Error during shutdown: {e}")
+        finally:
+            asyncio.get_event_loop().stop()
 
 
 if __name__ == "__main__":
@@ -50,18 +53,15 @@ if __name__ == "__main__":
     )
     logging.info(f'Starting app..')
 
-    loop = asyncio.get_event_loop()
-    app_manager = AppManager()
+    async def main():
+        app_manager = AppManager()
+        event_loop = asyncio.get_event_loop()
+        app_manager.setup_signals(event_loop)
 
-    app_manager.setup_signals(loop)
+        await app_manager.db_manager.run_db()
+        await app_manager.scheduler_manager.start_scheduler()
+        await app_manager.bot_manager.start_bot()
 
-    try:
-        loop.run_until_complete(app_manager.db_manager.run_db())
-        loop.run_until_complete(app_manager.scheduler_manager.start_scheduler())
-        loop.run_until_complete(app_manager.bot_manager.start_bot())
-        loop.run_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        loop.run_until_complete(app_manager.db_manager.close_db())
-        loop.close()
+        await asyncio.Event().wait()
+
+    asyncio.run(main())
