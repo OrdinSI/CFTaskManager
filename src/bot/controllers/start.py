@@ -22,7 +22,7 @@ class StartController:
             user_name = message.from_user.username if message.from_user.username else "Пользователь"
 
             user = await self.start_model.get_user(user_id)
-            if not user:
+            if user is None:
                 await self.start_model.create_user(user_id, user_name)
 
             await self.chat_view.send_message(user_id, NEW_USER_GREETING.format(user_name))

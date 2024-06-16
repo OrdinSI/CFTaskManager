@@ -1,3 +1,7 @@
+from typing import Optional
+
+import tortoise
+
 from src.db.models.user import User
 
 
@@ -8,10 +12,12 @@ class UserModel:
         pass
 
     @staticmethod
-    async def get_user(user_id: int) -> User:
+    async def get_user(user_id: int) -> Optional[User]:
         """ Get user. """
         try:
             return await User.get(user_id=user_id)
+        except tortoise.exceptions.DoesNotExist:
+            return None
         except Exception as e:
             raise e
 
