@@ -9,7 +9,7 @@ TORTOISE_ORM = {
         "default": {
             "engine": "tortoise.backends.asyncpg",
             "credentials": {
-                "host": os.getenv('DB_HOST'),
+                "host": "db",
                 "port": os.getenv('DB_PORT'),
                 "user": os.getenv('DB_USER'),
                 "password": os.getenv('DB_PASSWORD'),

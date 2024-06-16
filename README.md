@@ -9,7 +9,7 @@ CFTaskManager парсит задачи с сайта Codeforces, сохраня
 ## Требования
 
 - Python 3.11
-- PostgreSQL
+- PostgreSQL - ставится в контейнере.
 
 ## Сборка и настройка проекта
 
